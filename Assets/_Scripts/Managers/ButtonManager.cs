@@ -46,29 +46,35 @@ namespace MeteTurkay{
             ButtonObjectMove.ButtonMove += ButtonObjectMove_ButtonMove; 
         }
 
-        private void ButtonObjectMove_ButtonMove(ButtonUnit arg1, int arg2)
+        private void ButtonObjectMove_ButtonMove(ButtonUnit buttonUnit, int buttonAreaIndex)
         {
-            if (arg2 != -1)
+			print(buttonBuyAreas[buttonAreaIndex].buttonUnit != buttonUnit);
+            if (buttonAreaIndex != -1&& buttonBuyAreas[buttonAreaIndex].buttonUnit!=buttonUnit)
             {
-                if (buttonBuyAreas[arg2].hasButton)
+                if (buttonBuyAreas[buttonAreaIndex].hasButton)
                 {
-					print(CanMerge(buttonBuyAreas[arg2].buttonUnit.level, arg1.level));
-                    if (CanMerge(buttonBuyAreas[arg2].buttonUnit.level, arg1.level))
+					print(CanMerge(buttonBuyAreas[buttonAreaIndex].buttonUnit.level, buttonUnit.level));
+                    if (CanMerge(buttonBuyAreas[buttonAreaIndex].buttonUnit.level, buttonUnit.level))
                     {
-						buttonBuyAreas[arg1.buyAreaIndex].hasButton = false;
-						arg1.ButtonObjectMove.SetStartPosition(buttonBuyAreas[arg2].putLocation.position);
-						this.Wait(1, () => { arg1.gameObject.SetActive(false); buttonBuyAreas[arg2].buttonUnit.gameObject.SetActive(false);
-							MergeButton(arg1.level, arg2);
+						buttonBuyAreas[buttonUnit.buyAreaIndex].hasButton = false;
+						buttonBuyAreas[buttonUnit.buyAreaIndex].buttonUnit = null;
+						buttonUnit.ButtonObjectMove.SetStartPosition(buttonBuyAreas[buttonAreaIndex].putLocation.position);
+
+						this.Wait(1, () => {
+							buttonUnit.gameObject.SetActive(false); 
+							buttonBuyAreas[buttonAreaIndex].buttonUnit.gameObject.SetActive(false);
+							MergeButton(buttonUnit.level, buttonAreaIndex);
 						});
 					}
                 }
                 else
                 {
-					arg1.ButtonObjectMove.SetStartPosition(buttonBuyAreas[arg2].putLocation.position);
-					buttonBuyAreas[arg1.buyAreaIndex].hasButton = false;
-					arg1.buyAreaIndex = arg2;
-					buttonBuyAreas[arg2].hasButton = true;
-					buttonBuyAreas[arg2].buttonUnit = arg1;
+					buttonUnit.ButtonObjectMove.SetStartPosition(buttonBuyAreas[buttonAreaIndex].putLocation.position);
+					buttonBuyAreas[buttonUnit.buyAreaIndex].hasButton = false;
+					buttonBuyAreas[buttonUnit.buyAreaIndex].buttonUnit = null;
+					buttonUnit.buyAreaIndex = buttonAreaIndex;
+					buttonBuyAreas[buttonAreaIndex].hasButton = true;
+					buttonBuyAreas[buttonAreaIndex].buttonUnit = buttonUnit;
                 }
             }
         }
